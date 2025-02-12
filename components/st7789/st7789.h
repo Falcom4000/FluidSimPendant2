@@ -1,8 +1,11 @@
 #ifndef MAIN_ST7789_H_
 #define MAIN_ST7789_H_
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 #include "driver/spi_master.h"
 #include "fontx.h"
+
 
 #define rgb565(r, g, b) (((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3))
 
@@ -86,5 +89,12 @@ void lcdInversionOff(TFT_t * dev);
 void lcdInversionOn(TFT_t * dev);
 void lcdWrapArround(TFT_t * dev, SCROLL_TYPE_t scroll, int start, int end);
 void lcdDrawFinish(TFT_t *dev);
+void lcdDrawFillRect2(TFT_t *dev, uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t color);
+void ByteBlueInit();
+void ByteWhiteInit();
+
+#ifdef __cplusplus
+}
+#endif
 #endif /* MAIN_ST7789_H_ */
 

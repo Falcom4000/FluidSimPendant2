@@ -1,7 +1,13 @@
-set(srcs "main.c"
-    "decode_png.c"
-    "decode_jpeg_v5.c"
-    "pngle.c"
-    )
+idf_component_register(
+                         SRCS 
+                              "./main.cpp" 
+                              "./PWR_Key/PWR_Key.c"
+                              "./FluidSim/Scene.cpp"
+                              "./QMI8658/QMI8658.cpp"
 
-idf_component_register(SRCS ${srcs} INCLUDE_DIRS ".")
+                         INCLUDE_DIRS 
+                              "./PWR_Key"
+                              "./FluidSim"
+                              "./QMI8658"
+                              "."
+                       )

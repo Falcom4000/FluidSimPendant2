@@ -36,6 +36,9 @@
 
 static const int SPI_Command_Mode = 0;
 static const int SPI_Data_Mode = 1;
+#define ByteColorSize 1024
+#define CSB 1
+uint8_t* ByteBlue, *ByteWhite;
 // static const int SPI_Frequency = SPI_MASTER_FREQ_20M;
 // static const int SPI_Frequency = SPI_MASTER_FREQ_26M;
 // static const int SPI_Frequency = SPI_MASTER_FREQ_40M;
@@ -191,6 +194,26 @@ bool spi_master_write_addr(TFT_t *dev, uint16_t addr1, uint16_t addr2)
 	return spi_master_write_byte(dev->_SPIHandle, Byte, 4);
 }
 
+void ByteBlueInit()
+{
+	ByteBlue = (uint8_t*)heap_caps_calloc(CSB, ByteColorSize, MALLOC_CAP_DMA);
+	for (int i = 0; i < ByteColorSize/2; i++)
+	{
+		ByteBlue[i * 2] = (BLUE >> 8) & 0xFF;
+		ByteBlue[i * 2 + 1] = BLUE & 0xFF;
+	}
+}
+
+void ByteWhiteInit()
+{
+	ByteWhite = (uint8_t*)heap_caps_calloc(CSB, ByteColorSize, MALLOC_CAP_DMA);
+	for (int i = 0; i < ByteColorSize/2; i++)
+	{
+		ByteWhite[i * 2] = (WHITE >> 8) & 0xFF;
+		ByteWhite[i * 2 + 1] = WHITE & 0xFF;
+	}
+}
+
 bool spi_master_write_color(TFT_t *dev, uint16_t color, uint16_t size)
 {
 	static uint8_t Byte[1024];
@@ -203,7 +226,17 @@ bool spi_master_write_color(TFT_t *dev, uint16_t color, uint16_t size)
 	gpio_set_level(dev->_dc, SPI_Data_Mode);
 	return spi_master_write_byte(dev->_SPIHandle, Byte, size * 2);
 }
+bool spi_master_write_blue(TFT_t *dev, uint16_t size)
+{
+	gpio_set_level(dev->_dc, SPI_Data_Mode);
+	return spi_master_write_byte(dev->_SPIHandle, ByteBlue, size * 2);
+}
 
+bool spi_master_write_white(TFT_t *dev, uint16_t size)
+{
+	gpio_set_level(dev->_dc, SPI_Data_Mode);
+	return spi_master_write_byte(dev->_SPIHandle, ByteWhite, size * 2);
+}
 // Add 202001
 bool spi_master_write_colors(TFT_t *dev, uint16_t *colors, uint16_t size)
 {
@@ -399,7 +432,6 @@ void lcdDrawFillRect(TFT_t *dev, uint16_t x1, uint16_t y1, uint16_t x2, uint16_t
 		uint16_t _x2 = x2 + dev->_offsetx;
 		uint16_t _y1 = y1 + dev->_offsety;
 		uint16_t _y2 = y2 + dev->_offsety;
-
 		spi_master_write_command(dev, 0x2A); // set column(x) address
 		spi_master_write_addr(dev, _x1, _x2);
 		spi_master_write_command(dev, 0x2B); // set Page(y) address
@@ -412,6 +444,46 @@ void lcdDrawFillRect(TFT_t *dev, uint16_t x1, uint16_t y1, uint16_t x2, uint16_t
 		}
 	}
 }
+
+void lcdDrawFillRect2(TFT_t *dev, uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t color)
+{
+	if (x1 >= dev->_width)
+		return;
+	if (x2 >= dev->_width)
+		x2 = dev->_width - 1;
+	if (y1 >= dev->_height)
+		return;
+	if (y2 >= dev->_height)
+		y2 = dev->_height - 1;
+
+	ESP_LOGD(TAG, "offset(x)=%d offset(y)=%d", dev->_offsetx, dev->_offsety);
+		uint16_t _x1 = x1 + dev->_offsetx;
+		uint16_t _x2 = x2 + dev->_offsetx;
+		uint16_t _y1 = y1 + dev->_offsety;
+		uint16_t _y2 = y2 + dev->_offsety;
+		spi_master_write_command(dev, 0x2A); // set column(x) address
+		spi_master_write_addr(dev, _x1, _x2);
+		spi_master_write_command(dev, 0x2B); // set Page(y) address
+		spi_master_write_addr(dev, _y1, _y2);
+		spi_master_write_command(dev, 0x2C); // Memory Write
+		uint16_t size = (_y2 - _y1 + 1) * (_x2 - _x1 + 1);
+		if(color == BLUE){
+			spi_master_write_blue(dev, size);
+		}
+		else
+		{
+			spi_master_write_white(dev, size);
+		}
+		
+		// for (int i = _x1; i <= _x2; i++)
+		// {
+			
+		// 	if(color == BLUE)
+				
+		// 	else
+				
+		// }
+	}
 
 // Display OFF
 void lcdDisplayOff(TFT_t *dev)

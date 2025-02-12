@@ -18,7 +18,7 @@
 #include "decode_png.h"
 #include "pngle.h"
 
-#define INTERVAL 400
+#define INTERVAL 0
 #define WAIT vTaskDelay(INTERVAL)
 
 static const char *TAG = "ST7789";
@@ -56,10 +56,10 @@ TickType_t FillTest(TFT_t *dev, int width, int height)
 
 	lcdFillScreen(dev, RED);
 	lcdDrawFinish(dev);
-	vTaskDelay(50);
+	//vTaskDelay(50);
 	lcdFillScreen(dev, GREEN);
 	lcdDrawFinish(dev);
-	vTaskDelay(50);
+	//vTaskDelay(50);
 	lcdFillScreen(dev, BLUE);
 	lcdDrawFinish(dev);
 
@@ -1109,7 +1109,7 @@ TickType_t WrapArroundTest(TFT_t *dev, int width, int height)
 				lcdDrawFinish(dev);
 			}
 		}
-		vTaskDelay(100);
+		//vTaskDelay(100);
 
 		for (int i = 0; i < width; i++)
 		{
@@ -1131,7 +1131,7 @@ TickType_t WrapArroundTest(TFT_t *dev, int width, int height)
 				lcdDrawFinish(dev);
 			}
 		}
-		vTaskDelay(100);
+		//vTaskDelay(100);
 
 		for (int i = 0; i < height; i++)
 		{
