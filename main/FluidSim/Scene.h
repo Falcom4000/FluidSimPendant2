@@ -48,7 +48,6 @@ void update(real dt, Vector3 G);
 void init(Vec center);
 void add_object(Vec center, int AddNum);
 float getdt(){ return dt;};
-void DrawRectNow(TFT_t* dev, uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint8_t* color);
 int getNumParticles(){ return particles.size();};
 };
 #endif // SCENE_H

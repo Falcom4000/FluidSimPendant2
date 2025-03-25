@@ -98,19 +98,6 @@ extern "C" void Scene::add_object(Vec center, int AddNum)
         return a.x.y < b.x.y;
     });
 }
-
-IRAM_ATTR void Scene::DrawRectNow(TFT_t* dev, uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint8_t* color)
-{
-    spi_master_write_command(dev, 0x2A); // set column(x) address
-    spi_master_write_addr(dev, x1, x2);
-    spi_master_write_command(dev, 0x2B); // set Page(y) address
-    spi_master_write_addr(dev, y1, y2);
-    spi_master_write_command(dev, 0x2C); // Memory Write
-    gpio_num_t DC = GPIO_NUM_4 ;
-    gpio_set_level(DC, 1);
-	spi_master_write_byte(dev->_SPIHandle, color, (x2 - x1 + 1) * (y2 - y1 + 1) * BytePerPixel);
-}
-
 extern "C" IRAM_ATTR void Scene::render(TFT_t* dev)
 {
     for (auto& p : particles) { // Grid to particle

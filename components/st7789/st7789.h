@@ -18,6 +18,11 @@ extern "C" {
 #define YELLOW rgb565(255, 255,   0) // 0xFFE0
 #define CYAN   rgb565(  0, 156, 209) // 0x04FA
 #define PURPLE rgb565(128,   0, 128) // 0x8010
+#define PINK   rgb565(255, 192, 203) // 0xF81F
+#define ORANGE rgb565(255, 165,   0) // 0xFA00
+#define BROWN  rgb565(165,  42,  42) // 0xA145
+#define INDIGO rgb565( 75,   0, 130) // 0x4B00
+#define VIOLET rgb565(238, 130, 238) // 0xEC1A
 
 typedef enum {DIRECTION0, DIRECTION90, DIRECTION180, DIRECTION270} DIRECTION;
 
